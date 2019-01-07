@@ -1317,6 +1317,11 @@ async-limiter@~1.0.0:
   resolved "https://infusionsoft.jfrog.io/infusionsoft/api/npm/npm/async-limiter/-/async-limiter-1.0.0.tgz#78faed8c3d074ab81f22b4e985d79e8738f720f8"
   integrity sha1-ePrtjD0HSrgfIrTphdeehzj3IPg=
 
+async@0.2.x:
+  version "0.2.10"
+  resolved "https://infusionsoft.jfrog.io/infusionsoft/api/npm/npm/async/-/async-0.2.10.tgz#b6bbe0b0674b9d719708ca38de8c237cb526c3d1"
+  integrity sha1-trvgsGdLnXGXCMo43owjfLUmw9E=
+
 async@^1.5.2:
   version "1.5.2"
   resolved "https://infusionsoft.jfrog.io/infusionsoft/api/npm/npm/async/-/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
@@ -2892,6 +2897,13 @@ encodeurl@~1.0.2:
   resolved "https://infusionsoft.jfrog.io/infusionsoft/api/npm/npm/encodeurl/-/encodeurl-1.0.2.tgz#ad3ff4c86ec2d029322f5a02c3a9a606c95b3f59"
   integrity sha1-rT/0yG7C0CkyL1oCw6mmBslbP1k=
 
+encoding@^0.1.11:
+  version "0.1.12"
+  resolved "https://infusionsoft.jfrog.io/infusionsoft/api/npm/npm/encoding/-/encoding-0.1.12.tgz#538b66f3ee62cd1ab51ec323829d1f9480c74beb"
+  integrity sha1-U4tm8+5izRq1HsMjgp0flIDHS+s=
+  dependencies:
+    iconv-lite "~0.4.13"
+
 end-of-stream@^1.0.0, end-of-stream@^1.1.0:
   version "1.4.1"
   resolved "https://infusionsoft.jfrog.io/infusionsoft/api/npm/npm/end-of-stream/-/end-of-stream-1.4.1.tgz#ed29634d19baba463b6ce6b80a37213eab71ec43"
@@ -3744,6 +3756,14 @@ functional-red-black-tree@^1.0.1:
   resolved "https://infusionsoft.jfrog.io/infusionsoft/api/npm/npm/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
   integrity sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=
 
+fwk@1.1.8:
+  version "1.1.8"
+  resolved "https://infusionsoft.jfrog.io/infusionsoft/api/npm/npm/fwk/-/fwk-1.1.8.tgz#1ad4ed5300ef5baea1dcfb66ce497e747a15bb6d"
+  integrity sha1-GtTtUwDvW66h3Ptmzkl+dHoVu20=
+  dependencies:
+    async "0.2.x"
+    should "0.6.x"
+
 g-status@^2.0.2:
   version "2.0.2"
   resolved "https://infusionsoft.jfrog.io/infusionsoft/api/npm/npm/g-status/-/g-status-2.0.2.tgz#270fd32119e8fc9496f066fe5fe88e0a6bc78b97"
@@ -4160,7 +4180,7 @@ iconv-lite@0.4.23:
   dependencies:
     safer-buffer ">= 2.1.2 < 3"
 
-iconv-lite@^0.4.17, iconv-lite@^0.4.24, iconv-lite@^0.4.4:
+iconv-lite@^0.4.17, iconv-lite@^0.4.24, iconv-lite@^0.4.4, iconv-lite@~0.4.13:
   version "0.4.24"
   resolved "https://infusionsoft.jfrog.io/infusionsoft/api/npm/npm/iconv-lite/-/iconv-lite-0.4.24.tgz#2022b4b25fbddc21d2f524974a474aafe733908b"
   integrity sha1-ICK0sl+93CHS9SSXSkdKr+czkIs=
@@ -4611,7 +4631,7 @@ is-resolvable@^1.0.0:
   resolved "https://infusionsoft.jfrog.io/infusionsoft/api/npm/npm/is-resolvable/-/is-resolvable-1.1.0.tgz#fb18f87ce1feb925169c9a407c19318a3206ed88"
   integrity sha1-+xj4fOH+uSUWnJpAfBkxijIG7Yg=
 
-is-stream@^1.1.0:
+is-stream@^1.0.1, is-stream@^1.1.0:
   version "1.1.0"
   resolved "https://infusionsoft.jfrog.io/infusionsoft/api/npm/npm/is-stream/-/is-stream-1.1.0.tgz#12d4a3dd4e68e0b79ceb8dbc84173ae80d91ca44"
   integrity sha1-EtSj3U5o4Lec6428hBc66A2RykQ=
@@ -5557,6 +5577,14 @@ no-case@^2.2.0:
   dependencies:
     lower-case "^1.1.1"
 
+node-fetch@1.7.1:
+  version "1.7.1"
+  resolved "https://infusionsoft.jfrog.io/infusionsoft/api/npm/npm/node-fetch/-/node-fetch-1.7.1.tgz#899cb3d0a3c92f952c47f1b876f4c8aeabd400d5"
+  integrity sha1-iZyz0KPJL5UsR/G4dvTIrqvUANU=
+  dependencies:
+    encoding "^0.1.11"
+    is-stream "^1.0.1"
+
 node-forge@0.7.5:
   version "0.7.5"
   resolved "https://infusionsoft.jfrog.io/infusionsoft/api/npm/npm/node-forge/-/node-forge-0.7.5.tgz#6c152c345ce11c52f465c2abd957e8639cd674df"
@@ -6064,6 +6092,11 @@ parse-asn1@^5.0.0:
     create-hash "^1.1.0"
     evp_bytestokey "^1.0.0"
     pbkdf2 "^3.0.3"
+
+parse-full-name@^1.2.3:
+  version "1.2.3"
+  resolved "https://infusionsoft.jfrog.io/infusionsoft/api/npm/npm/parse-full-name/-/parse-full-name-1.2.3.tgz#5a298301b9a90a42eab61182815f3e13a39fabed"
+  integrity sha1-WimDAbmpCkLqthGCgV8+E6Ofq+0=
 
 parse-json@^2.2.0:
   version "2.2.0"
@@ -7377,6 +7410,11 @@ shell-quote@^1.6.1:
     array-map "~0.0.0"
     array-reduce "~0.0.0"
     jsonify "~0.0.0"
+
+should@0.6.x:
+  version "0.6.3"
+  resolved "https://infusionsoft.jfrog.io/infusionsoft/api/npm/npm/should/-/should-0.6.3.tgz#d4b55335c8908f3a6c47970b687f750372acdc73"
+  integrity sha1-1LVTNciQjzpsR5cLaH91A3Ks3HM=
 
 signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"
@@ -8724,3 +8762,10 @@ yorkie@^2.0.0:
     is-ci "^1.0.10"
     normalize-path "^1.0.0"
     strip-indent "^2.0.0"
+
+"youngliving-node@github:seanriceaz/youngliving-node":
+  version "1.0.1"
+  resolved "https://codeload.github.com/seanriceaz/youngliving-node/tar.gz/37eedae59eef9b3a14beb300e42079fbce3322ff"
+  dependencies:
+    fwk "1.1.8"
+    node-fetch "1.7.1"

@@ -1,13 +1,18 @@
 {
   "name": "yl-member-tree",
   "version": "0.1.0",
-  "private": true,
+  "description": "Display a beautiful interactive tree chart of your YL organization",
+  "author": "Sean Rice <seanrice@seanrice.net>",
+  "license": "MIT",
+  "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "parse-full-name": "^1.2.3",
+    "youngliving-node": "github:seanriceaz/youngliving-node",
     "vue": "^2.5.21"
   },
   "devDependencies": {

@@ -1,17 +1,25 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <YLLogin ref="login" v-on:loginUpdated="getMembersAndGraph"/>
+    <MemberGraph />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
+import MemberGraph from './components/MemberGraph.vue';
+import YLLogin from './components/YLLogin.vue';
 
 export default {
   name: 'app',
   components: {
-    HelloWorld,
+    MemberGraph,
+    YLLogin,
+  },
+  methods: {
+    // getMembersAndGraph(event) {
+
+    //  MemberGraph.render();
+    // },
   },
 };
 </script>
