@@ -16,10 +16,9 @@ export default {
     YLLogin,
   },
   methods: {
-    // getMembersAndGraph(event) {
-
-    //  MemberGraph.render();
-    // },
+    getMembersAndGraph(event) {
+      MemberGraph.render(event.data);
+    },
   },
 };
 </script>

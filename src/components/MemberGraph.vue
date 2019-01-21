@@ -8,8 +8,13 @@
 export default {
   name: 'MemberGraph',
   methods: {
-    render() {
-
+    render(data) {
+      if (process.env.NODE_ENV === 'development') {
+        // Use local json file localDev/yl-memberlist.json
+        console.log(data);
+      } else {
+        // Use results from web service ;)
+      }
     },
   },
 };
