@@ -1,20 +1,19 @@
 <template>
   <div>
-    <h2>Member tree for {{memberID}}</h2>
+    <h2>Your Member Tree</h2>
     <div id="graph"></div>
   </div>
 </template>
 <script>
 export default {
   name: 'MemberGraph',
+  data: () => ({
+    memberID: '',
+  }),
   methods: {
-    render(data) {
-      if (process.env.NODE_ENV === 'development') {
-        // Use local json file localDev/yl-memberlist.json
-        console.log(data);
-      } else {
-        // Use results from web service ;)
-      }
+    RenderGraph(members) {
+      // Do the rendering!
+      console.log(members);
     },
   },
 };

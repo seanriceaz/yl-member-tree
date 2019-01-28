@@ -1,13 +1,14 @@
 <template>
   <div id="app">
     <YLLogin ref="login" v-on:loginUpdated="getMembersAndGraph"/>
-    <MemberGraph />
+    <MemberGraph ref="graph" />
   </div>
 </template>
 
 <script>
 import MemberGraph from './components/MemberGraph.vue';
 import YLLogin from './components/YLLogin.vue';
+import LocalMembers from '../localDev/yl-memberlist.json';
 
 export default {
   name: 'app',
@@ -15,9 +16,22 @@ export default {
     MemberGraph,
     YLLogin,
   },
+  data: () => ({
+    members: {},
+  }),
   methods: {
     getMembersAndGraph(event) {
-      MemberGraph.render(event.data);
+      // Get our member list
+      const { graph } = this.$refs;
+      if (process.env.NODE_ENV === 'development') {
+        // Use local json file localDev/yl-memberlist.json
+        this.$data.members = LocalMembers; // This doesn't seem to be working
+        // const { memberID } = event;
+      } else {
+        // Use results from web service ;)
+        console.log(event);
+      }
+      graph.RenderGraph(this.$data.members);
     },
   },
 };

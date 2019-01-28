@@ -21,13 +21,11 @@
 
 export default {
   name: 'YLLogin',
-  data() {
-    return {
-      memberID: '',
-      password: '',
-      showDialog: true,
-    };
-  },
+  data: () => ({
+    memberID: '',
+    password: '',
+    showDialog: true,
+  }),
   methods: {
     updateLogin() {
       this.showDialog = false;

@@ -13,9 +13,7 @@ Vue.use(MdDialog);
 Vue.config.productionTip = false;
 
 const data = {
-  memberID: '',
-  password: '',
-  members: {},
+
 };
 
 new Vue({
