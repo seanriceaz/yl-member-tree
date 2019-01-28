@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Your Member Tree</h2>
+    <h2>Your Member Tree {{memberID}}</h2>
     <div id="graph"></div>
   </div>
 </template>
@@ -11,9 +11,11 @@ export default {
     memberID: '',
   }),
   methods: {
-    RenderGraph(members) {
+    RenderGraph(data) {
       // Do the rendering!
-      console.log(members);
+      this.$data.memberID = data.memberID;
+      this.$data.members = data.members;
+      
     },
   },
 };

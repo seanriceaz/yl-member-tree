@@ -10,6 +10,8 @@ import MemberGraph from './components/MemberGraph.vue';
 import YLLogin from './components/YLLogin.vue';
 import LocalMembers from '../localDev/yl-memberlist.json';
 
+const d3 = require('d3');
+
 export default {
   name: 'app',
   components: {
@@ -31,7 +33,13 @@ export default {
         // Use results from web service ;)
         console.log(event);
       }
-      graph.RenderGraph(this.$data.members);
+      graph.RenderGraph({
+        members: this.$data.members,
+        memberID: event.memberID;
+        //top node is the root memberID
+        
+
+      });
     },
   },
 };
