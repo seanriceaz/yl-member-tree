@@ -43,7 +43,7 @@ export default {
   }),
   methods: {
     RenderGraph(data) {
-      const nest = ltt.GetTree();
+      const nest = {};
       // Do the rendering!
       this.$data.memberID = data.memberID;
       this.$data.members = data.members.accounts;
