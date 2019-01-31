@@ -9,19 +9,20 @@
   </div>
 </template>
 <script>
-const d3 = require('d3');
-// Need a recursive function. This one only works in certain situations.
 
-const toolTip = d3.select(document.getElementById("toolTip"));
-const header = d3.select(document.getElementById("head"));
-const tree = d3.layout.tree();
+const d3 = Object.assign({}, require('d3'), require('d3-hierarchy'), require('d3-scale'), require('d3-selection'));
+// require("d3-geo-projection"));
+
+const toolTip = d3.select(document.getElementById('toolTip'));
+const header = d3.select(document.getElementById('head'));
+const tree = d3.tree(); // d3.layout.tree()?
 // Settings for the Tree layout
 const m = [0, 60, 0, 60]; // Margins
 const w = 900 - m[1] - m[3]; // Width
 const h = 900 - m[0] - m[2]; // Height
 // Color palette
 const colors = ['#D5252F', '#E96B38', '#F47337', '#B02D5D', '#9B2C67', '#982B9A', '#692DA7', '#5725AA', '#4823AF'];
-const diagonal = d3.svg.diagonal()
+const diagonal = d3.diagonal() // d3.svg.diagonal()?
   .projection(d => [d.y, d.x]);
 const vis = d3.select('#graph').append('svg:svg')
   .attr('width', w + m[1] + m[3])
@@ -39,8 +40,8 @@ tree.children(d => d.values);
 tree.size([h, w]); // Sizes of the chart
 
 
-function unflatten(array, rootID, parent, tree) {
-  let myTree = typeof tree !== 'undefined' ? tree : [];
+function unflatten(array, rootID, parent, thisTree) {
+  let myTree = typeof thisTree !== 'undefined' ? thisTree : [];
   const myParent = parent;
   const children = array.filter(child => (child.sponsorid === myParent.customerid));
   if (children.length) {
@@ -79,6 +80,15 @@ function toggleAll(d) {
   return myD;
 }
 
+function nodeOnMouseOver(d) {
+  toolTip.transition()
+    .duration(200)
+    .style('opacity', '.9');
+  header.text(`${d.properName.first} ${d.properName.last}`);
+  toolTip.style('left', `${d3.event.pageX + 15}px`)
+    .style('top', `${d3.event.pageY - 75}px`);
+}
+
 function update(source) {
   const duration = d3.event && d3.event.altKey ? 5000 : 500;
   const nodes = tree.nodes(root).reverse();
@@ -86,38 +96,49 @@ function update(source) {
 
   // Normalize for fixed-depth.
   nodes.forEach((d) => {
-    d.y = d.depth * 180;
-    d.numChildren = (d.children) ? d.children.length : 0;
+    const myD = d;
+    myD.y = d.depth * 180;
+    myD.numChildren = (d.children) ? d.children.length : 0;
 
     if (d.depth === 1) {
-      if (depthCounter < colors.length) { d.linkColor = colors[depthCounter]; } else { d.linkColor = colors[(depthCounter % (colors.length - 1))]; }
-      depthCounter++;
+      if (depthCounter < colors.length) {
+        myD.linkColor = colors[depthCounter];
+      } else {
+        myD.linkColor = colors[(depthCounter % (colors.length - 1))];
+      }
+      depthCounter += 1;
     }
 
-    if (d.numChildren === 0 && d.XXchildren) d.numChildren = d.XXchildren.length;
+    if (d.numChildren === 0 && d.XXchildren) {
+      myD.numChildren = myD.XXchildren.length;
+    }
+    return myD;
   });
 
   // Set link colors
   nodes.forEach((d) => {
     let obj = d;
+    const myD = d;
 
     while ((obj.source && obj.source.depth > 1) || obj.depth > 1) {
       obj = (obj.source) ? obj.source.parent : obj.parent;
     }
 
-    d.linkColor = (obj.source) ? obj.source.linkColor : obj.linkColor;
+    myD.linkColor = (obj.source) ? obj.source.linkColor : obj.linkColor;
+    return myD;
   });
 
   // Update the nodes…
   const node = vis.selectAll('g.node')
-    .data(nodes, d => d.id || (d.id +i));
+    .data(nodes, d => d.id || (d.id)); // Previously had some I variable.
 
   // Enter any new nodes at the parent's previous position.
   const nodeEnter = node.enter().append('svg:g')
     .attr('class', 'node')
-    .attr('transform', d => `translate(${source.y0},${source.x0})`)
+    .attr('transform', () => `translate(${source.y0},${source.x0})`)
     .on('click', (d) => {
       if (d.numChildren > 50) {
+        // eslint-disable-next-line
         alert(`${d.key} has too many departments (${d.numChildren}) to view at once.`);
       } else {
         toggle(d);
@@ -128,7 +149,7 @@ function update(source) {
   nodeEnter.append('svg:circle')
     .attr('r', 1e-6)
     .on('mouseover', (d) => { nodeOnMouseOver(d); })
-    .on('mouseout', (d) => { // when the mouse leaves a circle, do the following
+    .on('mouseout', () => { // when the mouse leaves a circle, do the following
       toolTip.transition() // declare the transition properties to fade-out the div
         .duration(500) // it shall take 500ms
         .style('opacity', 0); // and go all the way to an opacity of nil
@@ -164,7 +185,7 @@ function update(source) {
   nodeUpdate.select('circle')
     .attr('r', (d) => {
       const ret = levelRadius(d.ogv);
-      return (isNaN(ret) ? 2 : ret);
+      return (Number.isNaN(ret) ? 2 : ret);
     })
     .style('fill', d => (d.source ? d.source.linkColor : d.linkColor))
     .style('fill-opacity', (d) => {
@@ -214,7 +235,7 @@ function update(source) {
     })
     .style('stroke-width', (d) => {
       const ret = levelRadius(d.target.ogv) * 2;
-      return (isNaN(ret) ? 4 : ret);
+      return (Number.isNaN(ret) ? 4 : ret);
     })
     .style('stroke-opacity', (d) => {
       let ret = ((d.source.depth + 1) / 4.5);
@@ -235,7 +256,7 @@ function update(source) {
   linkUpdate
     .style('stroke-width', (d) => {
       const ret = levelRadius(Number(d.target.ogv)) * 2;
-      return (isNaN(ret) ? 4 : ret);
+      return (Number.isNaN(ret) ? 4 : ret);
     })
     .style('stroke-opacity', (d) => {
       let ret = ((d.source.depth + 1) / 4.5);
@@ -261,14 +282,6 @@ function update(source) {
     myD.y0 = d.y;
     return myD;
   });
-}
-function nodeOnMouseOver(d) {
-  toolTip.transition()
-    .duration(200)
-    .style('opacity', '.9');
-  header.text(`${d.properName.first} ${d.properName.last}`);
-  toolTip.style('left', `${d3.event.pageX + 15}px`)
-    .style('top', `${d3.event.pageY - 75}px`);
 }
 
 export default {
