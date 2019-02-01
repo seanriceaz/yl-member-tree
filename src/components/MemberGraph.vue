@@ -10,7 +10,18 @@
 </template>
 <script>
 
-const d3 = Object.assign({}, require('d3'), require('d3-hierarchy'), require('d3-scale'), require('d3-selection'));
+const d3 = Object.assign(
+  {},
+  require('d3'),
+  require('d3-array'),
+  require('d3-collection'),
+  require('d3-color'),
+  require('d3-format'),
+  require('d3-interpolate'),
+  require('d3-hierarchy'),
+  require('d3-scale'),
+  require('d3-selection'),
+);
 // require("d3-geo-projection"));
 
 const toolTip = d3.select(document.getElementById('toolTip'));
@@ -22,8 +33,11 @@ const w = 900 - m[1] - m[3]; // Width
 const h = 900 - m[0] - m[2]; // Height
 // Color palette
 const colors = ['#D5252F', '#E96B38', '#F47337', '#B02D5D', '#9B2C67', '#982B9A', '#692DA7', '#5725AA', '#4823AF'];
-const diagonal = d3.diagonal() // d3.svg.diagonal()?
-  .projection(d => [d.y, d.x]);
+
+const diagonal = d3.line()
+  .x(d => d.x)
+  .y(d => d.y)
+  .curve(d3.curveLinear);
 const vis = d3.select('#graph').append('svg:svg')
   .attr('width', w + m[1] + m[3])
   .attr('height', h + m[0] + m[2])
@@ -31,12 +45,12 @@ const vis = d3.select('#graph').append('svg:svg')
   .attr('transform', `translate(${m[3]},${m[0]})`);
 const formatNumber = d3.format(',.3f');
 const levelMax = 0;
-const levelRadius = d3.scale.sqrt()
+const levelRadius = d3.scaleSqrt()
   .domain([0, levelMax])
   .range([1, 40]);
 const root = {};
 
-tree.children(d => d.values);
+tree.children(d => d.children);
 tree.size([h, w]); // Sizes of the chart
 
 
@@ -263,7 +277,7 @@ function update(source) {
       if (d.target.ogv <= 0) ret = 0;
       return ret;
     });
-  //    .style('stroke-dasharray', function(d) {
+  //    .style('stroke-dasharray', function (d) {
   //       var ret=(d.target.ogv > 0) ? '' : '5,8';
   //       return ret;
   //    })
