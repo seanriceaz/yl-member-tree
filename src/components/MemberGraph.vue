@@ -71,8 +71,7 @@ const d3 = Object.assign(
 // const w = 900 - m[1] - m[3]; // Width
 // const h = 900 - m[0] - m[2]; // Height
 // // Color palette
-// const colors = ['#D5252F', '#E96B38', '#F47337', '#B02D5D', '#9B2C67', '#982B9A', '#692DA7',
-// '#5725AA', '#4823AF'];
+const colors = ['#D5252F', '#E96B38', '#F47337', '#B02D5D', '#9B2C67', '#982B9A', '#692DA7', '#5725AA', '#4823AF'];
 
 // const diagonal = d3.line()
 //   .x(d => d.x)
@@ -84,16 +83,10 @@ const d3 = Object.assign(
 //   .append('svg:g')
 //   .attr('transform', `translate(${m[3]},${m[0]})`);
 // const formatNumber = d3.format(',.3f');
-// const levelMax = 0;
-// const levelRadius = d3.scaleSqrt()
-//   .domain([0, levelMax])
-//   .range([1, 40]);
-// const root = d3.hierarchy({});
-
-// // tree.children(d => d.children);
-// tree(root);
-// tree.size([h, w]); // Sizes of the chart
-
+const levelMax = 6000;
+const levelRadius = d3.scaleSqrt()
+  .domain([0, levelMax])
+  .range([1, 40]);
 
 function unflatten(obj, rootID) {
   const myTree = obj[rootID];
@@ -388,7 +381,7 @@ export default {
       if (this.root) {
         return this.root.descendants().map(d => ({
           id: d.data.customerid,
-          r: 2.5,
+          r: levelRadius(d.data.ogv),
           className: `node${
             d.children ? ' node--internal' : ' node--leaf'}`,
           text: null, // d.properName.first + ' ' + d.properName.last,
@@ -430,7 +423,9 @@ export default {
           // UI controls and v-model
 
           style: {
-            stroke: that.settings.strokeColor,
+            stroke: colors[Math.floor(Math.random() * colors.length)],
+            strokeWidth: levelRadius(d.data.ogv) * 2, // This might style the descendants...
+            fill: "none",
           },
         }));
       }
