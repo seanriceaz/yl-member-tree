@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2>Your Member Tree {{memberID}}</h2>
-    <svg v-bind:width="settings.width" v-bind:height="settings.height">
+    <svg v-bind:width="settings.width" v-bind:height="settings.height" style="transform: rotate(135deg)">
 
     <!-- In contrast to D3’s "select" methods, we define the graphical elements explicitely here
     and use the template syntax to loop through collections and bind properties
@@ -71,6 +71,7 @@ const d3 = Object.assign(
 // const w = 900 - m[1] - m[3]; // Width
 // const h = 900 - m[0] - m[2]; // Height
 // // Color palette
+const diameter = window.innerWidth;
 const colors = ['#D5252F', '#E96B38', '#F47337', '#B02D5D', '#9B2C67', '#982B9A', '#692DA7', '#5725AA', '#4823AF'];
 
 // const diagonal = d3.line()
@@ -105,6 +106,12 @@ function unflatten(obj, rootID) {
   return myTree;
 }
 
+function radialPointStringNoPx(x, y) {
+  return `${y * Math.cos(x) + diameter / 2},${y * Math.sin(x) + diameter / 2}`;
+}
+function radialPointString(x, y) {
+  return `${y * Math.cos(x) + diameter / 2}px, ${y * Math.sin(x) + diameter / 2}px`;
+}
 // function toggle(d) {
 //   const myD = d;
 //   if (d.children) {
@@ -345,8 +352,8 @@ export default {
     memberID: null,
     members: {},
     settings: {
-      width: 900,
-      height: 900,
+      width: diameter,
+      height: diameter,
       margins: [0, 60, 0, 60],
       colors: ['#D5252F', '#E96B38', '#F47337', '#B02D5D', '#9B2C67', '#982B9A', '#692DA7', '#5725AA', '#4823AF'],
     },
@@ -368,9 +375,15 @@ export default {
     // up to date when the width and height settings change
 
     tree() {
-      return d3
+      // Straight left-to-right
+      /* return d3
         .cluster()
-        .size([this.settings.height, this.settings.width - 160]);
+        .size([this.settings.height, this.settings.width - 160]); */
+      // Tree
+      return d3
+        .tree() // or .cluster() will have a different effect...
+        .size([1.5 * Math.PI, diameter / 2 - this.settings.margins[1]]) // radians, radius
+        .separation((a, b) => (a.parent === b.parent ? 1 : 2) / a.depth);
     },
 
     // Instead of enter, update, exit, we mainly use computed properties
@@ -388,7 +401,7 @@ export default {
           highlight: null, // d.id.toLowerCase().indexOf(that.search.toLowerCase())
           // !== -1 && that.search !== '',
           style: {
-            transform: `translate(${d.y}px,${d.x}px)`,
+            transform: `translate(${radialPointString(d.x, d.y)})`,
           },
           textpos: {
             x: d.children ? -8 : 8,
@@ -407,8 +420,6 @@ export default {
     // that hold class names, styles, and other attributes for each datum
 
     links() {
-      const that = this;
-
       if (this.root) {
         // here we’ll calculate the "d" attribute for each path that is
         // then used in the template where we use "v-for" to loop through all of the links
@@ -416,7 +427,9 @@ export default {
 
         return this.root.descendants().slice(1).map(d => ({
           id: d.data.customerid,
-          d: `M${d.y},${d.x}C${d.parent.y + 100},${d.x} ${d.parent.y + 100},${d.parent.x} ${d.parent.y},${d.parent.x}`,
+          d: `M${radialPointStringNoPx(d.x, d.y)} ${radialPointStringNoPx(d.parent.x, d.parent.y)}`,
+          // d: `M${d.y},${d.x}C${d.parent.y + 100},${d.x} ${d.parent.y + 100},${d.parent.x}
+          // ${d.parent.y},${d.parent.x}`,
 
           // here we could of course calculate colors depending on data but for now all
           // links share the same color from the settings object that we can manipulate using
@@ -425,7 +438,7 @@ export default {
           style: {
             stroke: colors[Math.floor(Math.random() * colors.length)],
             strokeWidth: levelRadius(d.data.ogv) * 2, // This might style the descendants...
-            fill: "none",
+            fill: 'none',
           },
         }));
       }
