@@ -15,7 +15,9 @@
         <path v-for="link in links" class="link"
         v-bind:key="link.id"
         v-bind:d="link.d"
-        v-bind:style="link.style"></path>
+        v-bind:style="link.style"
+        v-bind:stroke="link.color"
+        v-bind:opacity="link.opacity"></path>
 
       </transition-group>
 
@@ -37,7 +39,7 @@
 
           <!-- Finally, text labels -->
 
-          <text v-bind:dx="node.textpos.x"
+          <text v-if="settings.showNames" v-bind:dx="node.textpos.x"
           v-bind:dy="node.textpos.y"
           v-bind:style="node.textStyle">
           {{ node.text }}
@@ -73,7 +75,6 @@ const d3 = Object.assign(
 // const h = 900 - m[0] - m[2]; // Height
 // // Color palette
 const diameter = window.innerWidth;
-const baseColor = '205,105,180'; // RGB without the extra markup... used later.
 // const diagonal = d3.line()
 //   .x(d => d.x)
 //   .y(d => d.y)
@@ -87,10 +88,6 @@ const baseColor = '205,105,180'; // RGB without the extra markup... used later.
 const levelRadius = d3.scaleSqrt()
   .domain([0, 6000])
   .range([2, 50]);
-
-function color(opacity) {
-  return `rgba(${baseColor},${opacity})`;
-}
 
 function unflatten(obj, rootID) {
   const myTree = obj[rootID];
@@ -112,6 +109,12 @@ function unflatten(obj, rootID) {
 function radialPointString(x, y, unit = '') {
   return `${y * Math.cos(x) + diameter / 2}${unit}, ${y * Math.sin(x) + diameter / 2}${unit}`;
 }
+
+function getLink(d) {
+  // Straight line
+  return `M${radialPointString(d.x, d.y)} ${radialPointString(d.parent.x, d.parent.y)}`;
+}
+
 // function toggle(d) {
 //   const myD = d;
 //   if (d.children) {
@@ -355,7 +358,8 @@ export default {
       width: diameter,
       height: diameter,
       margins: [0, 60, 0, 60],
-      colors: ['#D5252F', '#E96B38', '#F47337', '#B02D5D', '#9B2C67', '#982B9A', '#692DA7', '#5725AA', '#4823AF'],
+      showNames: false,
+      color: '#F81894',
     },
   }),
   computed: {
@@ -402,7 +406,7 @@ export default {
           // !== -1 && that.search !== '',
           style: {
             transform: `translate(${radialPointString(d.x, d.y, 'px')})`,
-            fill: color(1),
+            fill: this.settings.color,
           },
           textpos: {
             x: d.children ? -8 : 8,
@@ -429,17 +433,18 @@ export default {
 
         return this.root.descendants().slice(1).map(d => ({
           id: d.data.customerid,
-          d: `M${radialPointString(d.x, d.y)} ${radialPointString(d.parent.x, d.parent.y)}`,
+          d: getLink(d),
           // d: `M${d.y},${d.x}C${d.parent.y + 100},${d.x} ${d.parent.y + 100},${d.parent.x}
           // ${d.parent.y},${d.parent.x}`,
 
           // here we could of course calculate colors depending on data but for now all
           // links share the same color from the settings object that we can manipulate using
           // UI controls and v-model
-
+          color: this.settings.color,
+          opacity: 1 / Math.sqrt(d.data.level + 1),
           style: {
             // stroke: colors[Math.floor(Math.random() * colors.length)], // Random
-            stroke: color(1 / Math.sqrt(d.data.level + 1)),
+
             strokeWidth: levelRadius(d.data.ogv) * 2, // This might style the descendants...
             fill: 'none',
           },
