@@ -1,7 +1,8 @@
 <template>
   <div>
     <h2>Your Member Tree {{memberID}}</h2>
-    <svg v-bind:width="settings.width" v-bind:height="settings.height" style="transform: rotate(135deg)">
+    <svg v-bind:width="settings.width" v-bind:height="settings.height"
+      style="transform: rotate(135deg)">
 
     <!-- In contrast to D3’s "select" methods, we define the graphical elements explicitely here
     and use the template syntax to loop through collections and bind properties
@@ -31,7 +32,7 @@
           <!-- Circles for each node -->
 
           <circle v-bind:r="node.r"
-          v-bind:style="{'fill': index == selected ? '#ff0000' : '#bfbfbf'}">
+          v-bind:style="{'fill': index == selected ? '#ff0000' : ''}">
           </circle>
 
           <!-- Finally, text labels -->
@@ -72,8 +73,7 @@ const d3 = Object.assign(
 // const h = 900 - m[0] - m[2]; // Height
 // // Color palette
 const diameter = window.innerWidth;
-const colors = ['#D5252F', '#E96B38', '#F47337', '#B02D5D', '#9B2C67', '#982B9A', '#692DA7', '#5725AA', '#4823AF'];
-
+const baseColor = '205,105,180'; // RGB without the extra markup... used later.
 // const diagonal = d3.line()
 //   .x(d => d.x)
 //   .y(d => d.y)
@@ -84,10 +84,13 @@ const colors = ['#D5252F', '#E96B38', '#F47337', '#B02D5D', '#9B2C67', '#982B9A'
 //   .append('svg:g')
 //   .attr('transform', `translate(${m[3]},${m[0]})`);
 // const formatNumber = d3.format(',.3f');
-const levelMax = 6000;
 const levelRadius = d3.scaleSqrt()
-  .domain([0, levelMax])
-  .range([1, 40]);
+  .domain([0, 6000])
+  .range([2, 50]);
+
+function color(opacity) {
+  return `rgba(${baseColor},${opacity})`;
+}
 
 function unflatten(obj, rootID) {
   const myTree = obj[rootID];
@@ -106,11 +109,8 @@ function unflatten(obj, rootID) {
   return myTree;
 }
 
-function radialPointStringNoPx(x, y) {
-  return `${y * Math.cos(x) + diameter / 2},${y * Math.sin(x) + diameter / 2}`;
-}
-function radialPointString(x, y) {
-  return `${y * Math.cos(x) + diameter / 2}px, ${y * Math.sin(x) + diameter / 2}px`;
+function radialPointString(x, y, unit = '') {
+  return `${y * Math.cos(x) + diameter / 2}${unit}, ${y * Math.sin(x) + diameter / 2}${unit}`;
 }
 // function toggle(d) {
 //   const myD = d;
@@ -397,11 +397,12 @@ export default {
           r: levelRadius(d.data.ogv),
           className: `node${
             d.children ? ' node--internal' : ' node--leaf'}`,
-          text: null, // d.properName.first + ' ' + d.properName.last,
+          text: `${d.data.properName.first} ${d.data.properName.last}`,
           highlight: null, // d.id.toLowerCase().indexOf(that.search.toLowerCase())
           // !== -1 && that.search !== '',
           style: {
-            transform: `translate(${radialPointString(d.x, d.y)})`,
+            transform: `translate(${radialPointString(d.x, d.y, 'px')})`,
+            fill: color(1),
           },
           textpos: {
             x: d.children ? -8 : 8,
@@ -409,6 +410,7 @@ export default {
           },
           textStyle: {
             textAnchor: d.children ? 'end' : 'start',
+            transform: `rotate(${d.x * (180 / Math.PI)}deg)`,
           },
         }));
       }
@@ -427,7 +429,7 @@ export default {
 
         return this.root.descendants().slice(1).map(d => ({
           id: d.data.customerid,
-          d: `M${radialPointStringNoPx(d.x, d.y)} ${radialPointStringNoPx(d.parent.x, d.parent.y)}`,
+          d: `M${radialPointString(d.x, d.y)} ${radialPointString(d.parent.x, d.parent.y)}`,
           // d: `M${d.y},${d.x}C${d.parent.y + 100},${d.x} ${d.parent.y + 100},${d.parent.x}
           // ${d.parent.y},${d.parent.x}`,
 
@@ -436,7 +438,8 @@ export default {
           // UI controls and v-model
 
           style: {
-            stroke: colors[Math.floor(Math.random() * colors.length)],
+            // stroke: colors[Math.floor(Math.random() * colors.length)], // Random
+            stroke: color(1 / Math.sqrt(d.data.level + 1)),
             strokeWidth: levelRadius(d.data.ogv) * 2, // This might style the descendants...
             fill: 'none',
           },
@@ -451,6 +454,7 @@ export default {
       // Do the rendering!
       this.$data.memberID = data.memberID;
       this.$data.members = data.members.accounts;
+      this.$data.levelMax = data.members.accounts[data.memberID].ogv;
       // Create our nested array
       nest = unflatten(data.members.accounts,
         data.memberID);
