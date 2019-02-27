@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <YLLogin ref="login" v-on:loginUpdated="getMembersAndGraph"/>
+    <md-button ref="reset" v-on:click="reset()">Reset</md-button>
     <MemberGraph ref="graph" />
   </div>
 </template>
@@ -18,27 +19,48 @@ export default {
   },
   data: () => ({
     members: {},
+    memberID: '',
   }),
   methods: {
     getMembersAndGraph(event) {
-      // Get our member list
       const { graph } = this.$refs;
+      // Get our member list
       if (process.env.NODE_ENV === 'development') {
         // Use local json file localDev/yl-memberlist.json
-        this.$data.members = LocalMembers; // This doesn't seem to be working
+        this.members = LocalMembers; // This doesn't seem to be working
+        this.memberID = event.memberID;
         // const { memberID } = event;
       } else {
         // Use results from web service ;)
-        console.log(event);
+        this.members = event.members; // This doesn't seem to be working
+        this.memberID = event.memberID;
       }
+      // Save to local storage too!
+      localStorage.members = JSON.stringify(this.members);
+      localStorage.memberID = this.memberID;
+
       graph.RenderGraph({
-        members: this.$data.members,
-        memberID: event.memberID,
-        // top node is the root memberID
-
-
+        members: this.members,
+        memberID: this.memberID,
       });
     },
+    reset() {
+      const { login } = this.$refs;
+      login.reset();
+    },
+  },
+  mounted() {
+    if (localStorage.members && localStorage.memberID) {
+      const { graph } = this.$refs;
+      const { login } = this.$refs;
+      this.members = JSON.parse(localStorage.members);
+      this.memberID = localStorage.memberID;
+      graph.RenderGraph({
+        members: this.members,
+        memberID: this.memberID,
+      });
+      login.hideDialog();
+    }
   },
 };
 </script>

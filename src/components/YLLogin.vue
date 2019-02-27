@@ -34,6 +34,12 @@ export default {
         password: this.password,
       });
     },
+    hideDialog() {
+      this.showDialog = false;
+    },
+    reset() {
+      this.showDialog = true;
+    },
   },
 };
 </script>

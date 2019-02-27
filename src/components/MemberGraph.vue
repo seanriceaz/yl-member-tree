@@ -106,7 +106,7 @@ function smoothControls(d) {
   } else {
     cp1 = `${(getRadX(d.parent.x, d.parent.y) - getRadX(d.x, d.y)) * smoothness + getRadX(d.x, d.y)}, ${(getRadY(d.parent.x, d.parent.y) - getRadY(d.x, d.y)) * smoothness + getRadY(d.x, d.y)}`;
     cp2 = `${(getRadX(d.parent.x, d.parent.y) - getRadX(d.parent.parent.x, d.parent.parent.y)) * smoothness + getRadX(d.parent.x, d.parent.y)}, ${(getRadY(d.parent.x, d.parent.y) - getRadY(d.parent.parent.x, d.parent.parent.y)) * smoothness + getRadY(d.parent.x, d.parent.y)}`;
-    if (d.depth === 2){
+    if (d.depth === 2) {
       cp2 = `${(getRadX(d.parent.x, d.parent.y) - (diameter / 2)) * smoothness + getRadX(d.parent.x, d.parent.y)}, ${(getRadY(d.parent.x, d.parent.y) - (diameter / 2)) * smoothness + getRadY(d.parent.x, d.parent.y)}`;
     }
   }
@@ -151,7 +151,7 @@ export default {
     root() {
       if (this.members) {
         const myTree = this.tree(d3.hierarchy(this.memberTree));
-        
+
         // Set our "root" to where we want it.
         myTree.y = diameter / 3;
         myTree.x = Math.PI * 1.75;
@@ -247,7 +247,6 @@ export default {
       nest = unflatten(data.members.accounts,
         data.memberID);
       this.memberTree = nest;
-      console.log(nest);
     },
   },
 };
