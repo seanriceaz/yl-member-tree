@@ -390,7 +390,11 @@ export default {
 
     root() {
       if (this.members) {
-        return this.tree(d3.hierarchy(this.memberTree));
+        const myTree = this.tree(d3.hierarchy(this.memberTree));
+        // Set our "root" to where we want it.
+        myTree.y = diameter / 3;
+        myTree.x = Math.PI * 1.75;
+        return myTree;
         // return this.tree(d3.stratify(this.members)
         //   .id(d => d.customerid).parentId(d => d.sponsorid));
       }
