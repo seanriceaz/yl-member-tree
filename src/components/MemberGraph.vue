@@ -106,13 +106,35 @@ function unflatten(obj, rootID) {
   return myTree;
 }
 
+function getRadX(x, y) {
+  return y * Math.cos(x) + diameter / 2;
+}
+function getRadY(x, y) {
+  return y * Math.sin(x) + diameter / 2;
+}
 function radialPointString(x, y, unit = '') {
-  return `${y * Math.cos(x) + diameter / 2}${unit}, ${y * Math.sin(x) + diameter / 2}${unit}`;
+  return `${getRadX(x, y)}${unit}, ${getRadY(x, y)}${unit}`;
+}
+
+function smoothControls(d) {
+  const smoothness = 0.3;
+  let cp1 = '';
+  let cp2 = '';
+  if (d.depth === 1) {
+    cp2 = `${(getRadX(d.parent.x, d.parent.y) - (diameter / 2)) * smoothness + getRadX(d.parent.x, d.parent.y)}, ${(getRadY(d.parent.x, d.parent.y) - (diameter / 2)) * smoothness + getRadY(d.parent.x, d.parent.y)}`;
+    cp1 = `${(getRadX(d.parent.x, d.parent.y) - getRadX(d.x, d.y)) * smoothness + getRadX(d.x, d.y)}, ${(getRadY(d.parent.x, d.parent.y) - getRadY(d.x, d.y)) * smoothness + getRadY(d.x, d.y)}`;
+  } else {
+    cp2 = `${(getRadX(d.parent.x, d.parent.y) - getRadX(d.parent.parent.x, d.parent.parent.y)) * smoothness + getRadX(d.parent.x, d.parent.y)}, ${(getRadY(d.parent.x, d.parent.y) - getRadY(d.parent.parent.x, d.parent.parent.y)) * smoothness + getRadY(d.parent.x, d.parent.y)}`;
+    cp1 = `${(getRadX(d.parent.x, d.parent.y) - getRadX(d.x, d.y)) * smoothness + getRadX(d.x, d.y)}, ${(getRadY(d.parent.x, d.parent.y) - getRadY(d.x, d.y)) * smoothness + getRadY(d.x, d.y)}`;
+  }
+  return `${cp1} ${cp2}`;
 }
 
 function getLink(d) {
   // Straight line
-  return `M${radialPointString(d.x, d.y)} ${radialPointString(d.parent.x, d.parent.y)}`;
+  // return `M${radialPointString(d.x, d.y)} ${radialPointString(d.parent.x, d.parent.y)}`;
+  // Curved line
+  return `M${radialPointString(d.x, d.y)} C${smoothControls(d)} ${radialPointString(d.parent.x, d.parent.y)} `;
 }
 
 // function toggle(d) {
