@@ -3,6 +3,7 @@
     <md-toolbar ref="toolbar">
       <h2>Member: {{memberID}}</h2>
       <md-button ref="reset" v-on:click="reset()">Reset</md-button>
+      <color-picker :color="defaultColor" v-model="defaultColor" />
     </md-toolbar>
     <YLLogin ref="login" v-on:loginUpdated="getMembersAndGraph"/>
     <MemberGraph ref="graph" />
@@ -12,6 +13,7 @@
 <script>
 import MemberGraph from './components/MemberGraph.vue';
 import YLLogin from './components/YLLogin.vue';
+import ColorPicker from './components/ColorPicker.vue';
 import LocalMembers from '../localDev/yl-memberlist.json';
 
 export default {
@@ -19,6 +21,7 @@ export default {
   components: {
     MemberGraph,
     YLLogin,
+    ColorPicker,
   },
   data: () => ({
     members: {},
@@ -75,6 +78,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  overflow: hidden;
 }
 </style>
