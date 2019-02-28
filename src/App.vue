@@ -1,7 +1,10 @@
 <template>
   <div id="app">
+    <md-toolbar ref="toolbar">
+      <h2>Member: {{memberID}}</h2>
+      <md-button ref="reset" v-on:click="reset()">Reset</md-button>
+    </md-toolbar>
     <YLLogin ref="login" v-on:loginUpdated="getMembersAndGraph"/>
-    <md-button ref="reset" v-on:click="reset()">Reset</md-button>
     <MemberGraph ref="graph" />
   </div>
 </template>

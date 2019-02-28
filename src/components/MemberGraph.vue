@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h2>Your Member Tree {{memberID}}</h2>
     <svg v-bind:width="settings.width" v-bind:height="settings.height"
       style="transform: rotate(135deg)">
 
@@ -149,7 +148,7 @@ export default {
     // once data is loaded, the "root" will be calculated
 
     root() {
-      if (this.members) {
+      if (this.members && this.memberTree) {
         const myTree = this.tree(d3.hierarchy(this.memberTree));
 
         // Set our "root" to where we want it.
@@ -240,7 +239,7 @@ export default {
     RenderGraph(data) {
       let nest = [];
       // Do the rendering!
-      this.$data.memberID = data.memberID;
+      this.memberID = data.memberID;
       this.$data.members = data.members.accounts;
       this.$data.levelMax = data.members.accounts[data.memberID].ogv;
       // Create our nested array

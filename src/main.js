@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import {
-  MdButton, MdContent, MdField, MdDialog,
+  MdButton, MdContent, MdField, MdDialog, MdToolbar,
 } from 'vue-material/dist/components';
 import App from './App.vue';
 import 'vue-material/dist/vue-material.min.css';
@@ -9,6 +9,7 @@ Vue.use(MdButton);
 Vue.use(MdContent);
 Vue.use(MdField);
 Vue.use(MdDialog);
+Vue.use(MdToolbar);
 
 Vue.config.productionTip = false;
 
