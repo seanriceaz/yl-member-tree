@@ -3,10 +3,10 @@
     <md-toolbar ref="toolbar">
       <h2>Member: {{memberID}}</h2>
       <md-button ref="reset" v-on:click="reset()">Reset</md-button>
-      <color-picker :color="defaultColor" v-model="defaultColor" />
+      <color-picker :color="graphColor" v-model="graphColor" />
     </md-toolbar>
     <YLLogin ref="login" v-on:loginUpdated="getMembersAndGraph"/>
-    <MemberGraph ref="graph" />
+    <MemberGraph ref="graph" :color="graphColor" />
   </div>
 </template>
 
@@ -26,6 +26,7 @@ export default {
   data: () => ({
     members: {},
     memberID: '',
+    graphColor: '#F81894',
   }),
   methods: {
     getMembersAndGraph(event) {

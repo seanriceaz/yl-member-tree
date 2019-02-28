@@ -38,7 +38,7 @@
 
           <!-- Finally, text labels -->
 
-          <text v-if="settings.showNames" v-bind:dx="node.textpos.x"
+          <text v-if="showNames" v-bind:dx="node.textpos.x"
           v-bind:dy="node.textpos.y"
           v-bind:style="node.textStyle">
           {{ node.text }}
@@ -138,11 +138,19 @@ export default {
     settings: {
       width: diameter,
       height: diameter,
-      margins: [0, 60, 0, 60],
-      showNames: false,
-      color: '#F81894',
+      margins: [0, 10, 0, 10],
     },
   }),
+  props: {
+    color: {
+      type: String,
+      default: '#F81894',
+    },
+    showNames: {
+      type: Boolean,
+      default: false,
+    },
+  },
   computed: {
 
     // once data is loaded, the "root" will be calculated
@@ -190,7 +198,7 @@ export default {
           // !== -1 && that.search !== '',
           style: {
             transform: `translate(${radialPointString(d.x, d.y, 'px')})`,
-            fill: this.settings.color,
+            fill: this.color,
           },
           textpos: {
             x: d.children ? -8 : 8,
@@ -222,7 +230,7 @@ export default {
           // here we could of course calculate colors depending on data but for now all
           // links share the same color from the settings object that we can manipulate using
           // UI controls and v-model
-          color: this.settings.color,
+          color: this.color,
           opacity: 1 / Math.sqrt(d.data.level + 1),
           style: {
             // stroke: colors[Math.floor(Math.random() * colors.length)], // Random
