@@ -142,9 +142,17 @@ export default {
     },
   }),
   props: {
-    color: {
+    baseColor: {
       type: String,
       default: '#F81894',
+    },
+    selectedColor: {
+      type: String,
+      default: '#00BCD0',
+    },
+    linkedColor: {
+      type: String,
+      default: '#00D018',
     },
     showNames: {
       type: Boolean,
@@ -198,7 +206,7 @@ export default {
           // !== -1 && that.search !== '',
           style: {
             transform: `translate(${radialPointString(d.x, d.y, 'px')})`,
-            fill: this.color,
+            fill: this.baseColor,
           },
           textpos: {
             x: d.children ? -8 : 8,
@@ -230,7 +238,7 @@ export default {
           // here we could of course calculate colors depending on data but for now all
           // links share the same color from the settings object that we can manipulate using
           // UI controls and v-model
-          color: this.color,
+          color: this.baseColor,
           opacity: 1 / Math.sqrt(d.data.level + 1),
           style: {
             // stroke: colors[Math.floor(Math.random() * colors.length)], // Random
@@ -254,6 +262,23 @@ export default {
       nest = unflatten(data.members.accounts,
         data.memberID);
       this.memberTree = nest;
+    },
+    select(index, node) {
+      // This function runs when the nodes are clicked.
+      // These nodes don't store much. We'll need to start saving the locations of...
+      // Every node up the chain to root
+      // Enroller Node
+      // Names of upline members
+      // Activation date
+      // PV etc
+
+      // Pseudocode:
+      // Erase old selected line
+      // Draw the line all the way to the root
+      // Open a panel with information about this member in it.
+
+      console.log(index);
+      console.log(node);
     },
   },
 };

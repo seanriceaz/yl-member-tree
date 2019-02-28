@@ -6,7 +6,7 @@
       <color-picker :color="graphColor" v-model="graphColor" />
     </md-toolbar>
     <YLLogin ref="login" v-on:loginUpdated="getMembersAndGraph"/>
-    <MemberGraph ref="graph" :color="graphColor" />
+    <MemberGraph ref="graph" :baseColor="graphColor" />
   </div>
 </template>
 
