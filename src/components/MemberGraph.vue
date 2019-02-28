@@ -204,6 +204,13 @@ export default {
           text: `${d.data.properName.first} ${d.data.properName.last}`,
           highlight: null, // d.id.toLowerCase().indexOf(that.search.toLowerCase())
           // !== -1 && that.search !== '',
+          level: d.data.level,
+          parentID: (d.parent ? d.parent.data.customerid : null),
+          ancestors: d.ancestors().map(f => ({
+            x: f.x,
+            y: f.y,
+            id: f.data.customerid,
+          })),
           style: {
             transform: `translate(${radialPointString(d.x, d.y, 'px')})`,
             fill: this.baseColor,
