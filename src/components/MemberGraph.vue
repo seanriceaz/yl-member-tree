@@ -276,6 +276,19 @@ export default {
       }
       return null;
     },
+    customerIDMap() {
+      if (this.links && this.nodes) {
+        const customerMap = {};
+        // for (let i = 0; i < this.links.length; i += 1) {
+        //   customerMap[this.links[i].id].linkKey = i;
+        // }
+        // for (let j = 0; j < this.nodes.length; j += 1) {
+        //   customerMap[this.nodes[j].id].nodeKey = j;
+        // }
+        return customerMap;
+      }
+      return null;
+    },
   },
   methods: {
     RenderGraph(data) {
