@@ -46,6 +46,19 @@
 
         </g>
       </transition-group>
+
+      <transition-group tag="g" name="selected" >
+
+        <!-- Links are represented as paths -->
+
+        <path v-if="selectedNode.visible" class="link"
+          v-bind:d="selectedNode.d"
+          v-bind:style="selectedNode.style"
+          v-bind:stroke="selectedNode.color"
+        >
+        </path>
+
+      </transition-group>
     </svg>
   </div>
 </template>
@@ -139,6 +152,12 @@ export default {
       width: diameter,
       height: diameter,
       margins: [0, 10, 0, 10],
+    },
+    selectedNode: {
+      visible: false,
+      color: '',
+      style: null,
+      d: '',
     },
   }),
   props: {
@@ -281,7 +300,16 @@ export default {
 
       // Pseudocode:
       // Erase old selected line
+      /* var ancestorLine = `M${radialPointString(node.ancestors[0].x, node.ancestors[0].y)} C`;
+      for (let i = 0; i < node.ancestors.length; i++ ) {
+        ancestorLine += `M${radialPointString(node.ancestors[i].x, node.ancestors[i].y)}
+        C${smoothControls(d)}`;
+      }
+      this.selectedNode = {
+        d: ancestorLine,
+      }; */
       // Draw the line all the way to the root
+
       // Open a panel with information about this member in it.
 
       console.log(index);
