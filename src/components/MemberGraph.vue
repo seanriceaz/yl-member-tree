@@ -1,22 +1,22 @@
 <template>
   <div>
-    <svg v-bind:width="settings.width" v-bind:height="settings.height"
+    <svg :width="settings.width" :height="settings.height"
       style="transform: rotate(135deg)">
 
     <!-- In contrast to D3’s "select" methods, we define the graphical elements explicitely here
     and use the template syntax to loop through collections and bind properties
     such as "d" or "r" to those elements. -->
 
-        <transition-group tag="g" name="line" >
+        <transition-group tag="g" name="line">
 
         <!-- Links are represented as paths -->
 
         <path v-for="link in links" class="link"
-        v-bind:key="link.id"
-        v-bind:d="link.d"
-        v-bind:style="link.style"
-        v-bind:stroke="link.color"
-        v-bind:opacity="link.opacity"></path>
+        :key="link.id"
+        :d="link.d"
+        :style="link.style"
+        :stroke="link.color"
+        :opacity="link.opacity"></path>
 
       </transition-group>
 
@@ -26,21 +26,23 @@
 
       <transition-group tag="g" name="list">
         <g class="node"
-        v-on:click="select(index, node)" v-for="(node, index) in nodes"
-        v-bind:key="node.id" v-bind:style="node.style"
-        v-bind:class="[node.className, {'highlight': node.highlight}]">
+        @click="select(index, node)"
+        v-for="(node, index) in nodes"
+        :key="node.id"
+        :style="node.style"
+        :class="[node.className, {'highlight': node.highlight}]">
 
           <!-- Circles for each node -->
 
-          <circle v-bind:r="node.r"
-          v-bind:style="{'fill': index == selected ? '#ff0000' : ''}">
+          <circle :r="node.r"
+          :style="{'fill': index == selected ? '#ff0000' : ''}">
           </circle>
 
           <!-- Finally, text labels -->
 
-          <text v-if="showNames" v-bind:dx="node.textpos.x"
-          v-bind:dy="node.textpos.y"
-          v-bind:style="node.textStyle">
+          <text v-if="showNames" :dx="node.textpos.x"
+          :dy="node.textpos.y"
+          :style="node.textStyle">
           {{ node.text }}
           </text>
 
@@ -52,9 +54,9 @@
         <!-- Links are represented as paths -->
 
         <path v-if="selectedNode.visible" class="link"
-          v-bind:d="selectedNode.d"
-          v-bind:style="selectedNode.style"
-          v-bind:stroke="selectedNode.color"
+          :d="selectedNode.d"
+          :style="selectedNode.style"
+          :stroke="selectedNode.color"
         >
         </path>
 
